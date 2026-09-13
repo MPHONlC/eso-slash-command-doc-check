@@ -1,5 +1,5 @@
-name: 'Slash Command Doc Check'
-description: 'Scans Lua source for registered slash commands and checks each is documented in your doc files.'
+name: 'ESO Addon Slash Command Doc Check'
+description: 'Scans ESO addon Lua source for registered slash commands and checks each is documented in your doc files.'
 author: 'MPHONlC'
 branding:
   icon: 'terminal'
