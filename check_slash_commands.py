@@ -29,15 +29,23 @@ def find_primary_commands(source_glob):
     return primary - aliased
 
 
+def parse_doc_files(raw):
+    files = []
+    for chunk in raw.replace(',', '\n').splitlines():
+        chunk = chunk.strip()
+        if chunk:
+            files.append(chunk)
+    return files
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--source-glob', default='**/*.lua')
-    parser.add_argument('--esoui-file', default='README_ESOUI.txt')
-    parser.add_argument('--github-file', default='README.md')
-    parser.add_argument('--bethesda-file', default='README_BETHESDA.txt')
+    parser.add_argument('--doc-files', required=True)
     args = parser.parse_args()
 
     commands = find_primary_commands(args.source_glob)
+    doc_files = parse_doc_files(args.doc_files)
     out = ["## Slash command documentation check", ""]
 
     if not commands:
@@ -48,26 +56,20 @@ def main():
     out.append(f"Found {len(commands)} primary slash command(s) registered in code: {', '.join(sorted(commands))}")
     out.append("")
 
-    files = [
-        ("ESOUI", args.esoui_file),
-        ("GitHub", args.github_file),
-        ("Bethesda", args.bethesda_file),
-    ]
-
     any_missing = False
-    for label, path in files:
+    for path in doc_files:
         text = read(path)
         if text is None:
-            out.append(f"**{label}** (`{path}`): file not found - skipping.")
+            out.append(f"**`{path}`**: file not found - skipping.")
             continue
         missing = sorted(c for c in commands if c not in text)
         if missing:
             any_missing = True
-            out.append(f"**{label}** (`{path}`): missing {len(missing)} command(s): {', '.join(missing)}")
+            out.append(f"**`{path}`**: missing {len(missing)} command(s): {', '.join(missing)}")
             for c in missing:
-                print(f"::error::{label} ({path}) does not document slash command {c}")
+                print(f"::error::{path} does not document slash command {c}")
         else:
-            out.append(f"**{label}** (`{path}`): all commands documented.")
+            out.append(f"**`{path}`**: all commands documented.")
 
     print('\n'.join(out))
     if any_missing:
