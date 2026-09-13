@@ -1,5 +1,5 @@
 name: 'Slash Command Doc Check'
-description: 'Scans Lua source for registered slash commands and checks each is documented in your ESOUI, GitHub, and Bethesda docs.'
+description: 'Scans Lua source for registered slash commands and checks each is documented in your doc files.'
 author: 'MPHONlC'
 branding:
   icon: 'terminal'
@@ -10,18 +10,9 @@ inputs:
     description: 'Glob (recursive) matching your Lua source files'
     required: false
     default: '**/*.lua'
-  esoui_file:
-    description: 'Path to the ESOUI (BBCode) description file'
-    required: false
-    default: 'README_ESOUI.txt'
-  github_file:
-    description: 'Path to the GitHub-flavored markdown description file'
-    required: false
-    default: 'README.md'
-  bethesda_file:
-    description: 'Path to the Bethesda (plain markdown) description file'
-    required: false
-    default: 'README_BETHESDA.txt'
+  doc_files:
+    description: 'List of doc files to check, one per line (or comma-separated)'
+    required: true
 
 runs:
   using: 'composite'
@@ -31,7 +22,5 @@ runs:
       run: |
         python3 "${{ github.action_path }}/check_slash_commands.py" \
           --source-glob "${{ inputs.source_glob }}" \
-          --esoui-file "${{ inputs.esoui_file }}" \
-          --github-file "${{ inputs.github_file }}" \
-          --bethesda-file "${{ inputs.bethesda_file }}" \
+          --doc-files "${{ inputs.doc_files }}" \
           | tee -a "$GITHUB_STEP_SUMMARY"
