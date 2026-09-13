@@ -1,8 +1,9 @@
-# Slash Command Doc Check
+# ESO Addon Slash Command Doc Check
 
-Scans your Lua source for `SLASH_COMMANDS["/x"] = function ...` registrations and checks that each one is documented in as many doc files as you list - catches a command you added to code but forgot to add to the docs, or a rename that only got fixed in one place.
+Scans your ESO addon's Lua source for `SLASH_COMMANDS["/x"] = function ...` registrations (ESO's own slash-command API - other Lua-addon games use a different convention, e.g. WoW's `SlashCmdList`) and checks that each one is documented in as many doc files as you list - catches a command you added to code but forgot to add to the docs, or a rename that only got fixed in one place.
 
-Alias registrations (`SLASH_COMMANDS["/x"] = SLASH_COMMANDS["/y"]`) are automatically excluded - these are intentional shortcuts, not meant to be individually documented, and including them would produce constant false positives.
+> [!NOTE]
+> Alias registrations (`SLASH_COMMANDS["/x"] = SLASH_COMMANDS["/y"]`) are automatically excluded - these are intentional shortcuts, not meant to be individually documented, and including them would produce constant false positives.
 
 ## Usage
 
@@ -19,12 +20,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: MPHONlC/slash-command-doc-check@Version-0.0.2
+      - uses: MPHONlC/eso-slash-command-doc-check@Version-0.0.1
         with:
           doc_files: |
-            README_ESOUI.txt
+            README_BBCODE.txt
             README.md
-            README_BETHESDA.txt
+            README_COMMONMARK.txt
 ```
 
 `doc_files` accepts any number of files - one per line, or comma-separated on one line.
