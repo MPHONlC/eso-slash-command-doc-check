@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: MPHONlC/eso-slash-command-doc-check@Version-0.0.2
+      - uses: MPHONlC/eso-slash-command-doc-check@Version-0.0.3
         with:
           doc_files: |
             README_BBCODE.txt

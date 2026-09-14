@@ -22,5 +22,4 @@ runs:
       run: |
         python3 "${{ github.action_path }}/check_slash_commands.py" \
           --source-glob "${{ inputs.source_glob }}" \
-          --doc-files "${{ inputs.doc_files }}" \
-          | tee -a "$GITHUB_STEP_SUMMARY"
+          --doc-files "${{ inputs.doc_files }}"

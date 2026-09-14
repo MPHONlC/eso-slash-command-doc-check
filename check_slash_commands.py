@@ -1,3 +1,4 @@
+import os
 import re
 import sys
 import glob
@@ -47,10 +48,11 @@ def main():
     commands = find_primary_commands(args.source_glob)
     doc_files = parse_doc_files(args.doc_files)
     out = ["## Slash command documentation check", ""]
+    annotations = []
 
     if not commands:
         out.append(f"No primary SLASH_COMMANDS registrations found under `{args.source_glob}` - nothing to check.")
-        print('\n'.join(out))
+        emit(out, annotations)
         return
 
     out.append(f"Found {len(commands)} primary slash command(s) registered in code: {', '.join(sorted(commands))}")
@@ -67,13 +69,24 @@ def main():
             any_missing = True
             out.append(f"**`{path}`**: missing {len(missing)} command(s): {', '.join(missing)}")
             for c in missing:
-                print(f"::error::{path} does not document slash command {c}")
+                annotations.append(f"::error::{path} does not document slash command {c}")
         else:
             out.append(f"**`{path}`**: all commands documented.")
 
-    print('\n'.join(out))
+    emit(out, annotations)
     if any_missing:
         sys.exit(1)
+
+
+def emit(report_lines, annotations):
+    summary_path = os.environ.get('GITHUB_STEP_SUMMARY')
+    if summary_path:
+        with open(summary_path, 'a') as f:
+            f.write('\n'.join(report_lines) + '\n')
+    else:
+        print('\n'.join(report_lines))
+    for a in annotations:
+        print(a)
 
 
 if __name__ == '__main__':
